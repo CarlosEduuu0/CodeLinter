@@ -16,24 +16,17 @@ def validar_sk_live(cadeia: str) -> bool:
     return bool(re.fullmatch(SK_LIVE_PATTERN, cadeia))
 
 
-FLOAT_SCIENTIFIC_PATTERN: str = (
-    r"[+-]?(([0-9]+\.[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+)"
-)
+FLOAT_PATTERN: str = r"[+-]?[0-9]+\.[0-9]+"
 
 def validar_ponto_flutuante(cadeia: str) -> bool:
-    """Valida numéricos flutuantes ou em notação científica sem usar lookarounds."""
-    return bool(re.fullmatch(FLOAT_SCIENTIFIC_PATTERN, cadeia))
+    """Valida números decimais com sinal opcional, como -12.50 ou 3.14."""
+    return bool(re.fullmatch(FLOAT_PATTERN, cadeia))
 
 
-MODULE_IMPORT_PATTERN: str = (
-    r"(import\s+(([a-zA-Z0-9_{}\s,*]+)\s+from\s+)?['\"][a-zA-Z0-9_./-]+['\"]"
-    r"|(const|let|var)\s+[a-zA-Z0-9_{}\s,]+\s*=\s*require\(['\"][a-zA-Z0-9_./-]+['\"]\)"
-    r"|from\s+[a-zA-Z0-9_.]+\s+import\s+[a-zA-Z0-9_,\s*()]+"
-    r"|import\s+[a-zA-Z0-9_.,\s]+)"
-)
+MODULE_IMPORT_PATTERN: str = r"import\s+[a-zA-Z0-9_.]+(\s*,\s*[a-zA-Z0-9_.]+)*"
 
 def validar_import(cadeia: str) -> bool:
-    """Valida se uma linha completa é uma instrução de importação válida."""
+    """Valida se a linha é um import Python de um ou mais módulos (import os, sys)."""
     return bool(re.fullmatch(MODULE_IMPORT_PATTERN, cadeia))
 
 
@@ -77,34 +70,34 @@ CASOS_TESTE = [
         ("sk_live_skliveskliveskliveskli", False),  # 22 caracteres com as letras do prefixo
         ("", False),
     ]),
-    ("ER-03: Ponto Flutuante / Científico", validar_ponto_flutuante, [
+    ("ER-03: Número decimal", validar_ponto_flutuante, [
         # Aceitas
-        ("-3.14e+10", True), ("0.0005", True), ("1e10", True), ("+2.5E-3", True),
-        (".5", True),                 # caso-limite: sem parte inteira
-        ("3.", True),                 # caso-limite: sem casas decimais
+        ("-12.50", True), ("3.14", True), ("+0.5", True), ("0.0005", True),
+        ("1234567.89", True),
+        ("0.0", True),                # caso-limite: menor decimal possível (1 dígito de cada lado)
         # Rejeitadas
-        ("--3.14", False), ("3.14.15", False), ("e10", False),
-        ("42", False),                # caso-limite: inteiro não é ponto flutuante
-        (".", False),                 # caso-limite: ponto sozinho
-        ("1e", False),                # expoente sem dígitos
+        ("--3.14", False), ("3.14.15", False), ("1e10", False),
+        ("42", False),                # caso-limite: inteiro não é decimal
+        (".5", False),                # caso-limite: falta a parte inteira
+        ("3.", False),                # caso-limite: faltam as casas decimais
         ("", False),
     ]),
-    ("ER-04: Imports de Módulos", validar_import, [
+    ("ER-04: Import de módulo (Python)", validar_import, [
         # Aceitas
-        ("import React from 'react'", True),
-        ("const fs = require('fs')", True),
-        ("from os import path", True),
         ("import math", True),
-        ('import { useState } from "react"', True),
-        ("let cfg = require('./config/app-dev')", True),  # caso-limite: caminho com ./ / e -
+        ("import os.path", True),
+        ("import os, sys", True),
+        ("import os,sys,json", True),
+        ("import numpy_v2", True),
+        ("import a", True),                  # caso-limite: módulo de 1 caractere
         # Rejeitadas
         ("import", False),
         ("require('fs')", False),
-        ("from import path", False),
+        ("from os import path", False),      # outra forma de import, fora desta linguagem
         ("include <stdio.h>", False),
-        ("import React from 'react", False),   # aspas sem fechar
-        ("const fs = require('fs'", False),    # caso-limite: falta só o ')'
-        ("from os import", False),             # caso-limite: import sem nomes
+        ("import os,", False),               # caso-limite: vírgula sem o próximo módulo
+        ("import os sys", False),            # módulos sem vírgula
+        ("imports math", False),             # palavra-chave errada
         ("", False),
     ]),
     ("ER-05: Comentários", validar_comentario, [

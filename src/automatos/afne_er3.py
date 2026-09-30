@@ -5,47 +5,26 @@ def criptografia(caracter):
         return 1
     elif caracter == '.':
         return 2
-    elif caracter in ['e', 'E']:
-        return 3
     else:
         return -1
 
-# Colunas: 0 = sinal, 1 = dígito, 2 = ponto, 3 = expoente (e/E), 4 = ε
-estados = {f"q{i}" for i in range(22)}
-alfabeto = {0, 1, 2, 3}
+# Colunas: 0 = sinal, 1 = dígito, 2 = ponto, 3 = ε
+estados = {f"q{i}" for i in range(11)}
+alfabeto = {0, 1, 2}
 estado_inicial = "q0"
-estado_final = {"q17"}
+estado_final = {"q10"}
 funcao = {
-    # sinal opcional
-    "q0":  [{"q1"}, set(), set(), set(), {"q1"}],
-    # escolhe o formato: "3.14" (q2), ".5" (q12) ou "1e10" (q15)
-    "q1":  [set(), set(), set(), set(), {"q2", "q12", "q15"}],
-    # formato 1: dígitos + ponto + dígitos opcionais
-    "q2":  [set(), {"q3"}, set(), set(), set()],
-    "q3":  [set(), set(), set(), set(), {"q4", "q5"}],
-    "q4":  [set(), {"q4"}, set(), set(), {"q5"}],
-    "q5":  [set(), set(), {"q7"}, set(), set()],
-    "q7":  [set(), {"q8"}, set(), set(), {"q11"}],
-    "q8":  [set(), set(), set(), set(), {"q9", "q11"}],
-    "q9":  [set(), {"q10"}, set(), set(), {"q11"}],
-    "q10": [set(), set(), set(), set(), {"q9", "q11"}],
-    "q11": [set(), set(), set(), set(), {"q6"}],
-    # formato 2: ponto + dígitos
-    "q12": [set(), set(), {"q13"}, set(), set()],
-    "q13": [set(), {"q14"}, set(), set(), set()],
-    "q14": [set(), set(), set(), set(), {"q13", "q6"}],
-    # fim da mantissa com ponto: expoente é opcional
-    "q6":  [set(), set(), set(), set(), {"q17", "q18"}],
-    # formato 3: dígitos + expoente obrigatório
-    "q15": [set(), {"q16"}, set(), set(), set()],
-    "q16": [set(), set(), set(), set(), {"q15", "q18"}],
-    # expoente: e/E + sinal opcional + dígitos
-    "q18": [set(), set(), set(), {"q19"}, set()],
-    "q19": [{"q20"}, set(), set(), set(), {"q20"}],
-    "q20": [set(), {"q21"}, set(), set(), set()],
-    "q21": [set(), set(), set(), set(), {"q20", "q17"}],
-    # final
-    "q17": [set(), set(), set(), set(), set()],
+    "q0":  [{"q1"}, set(), set(), {"q1"}],
+    "q1":  [set(), set(), set(), {"q2"}],
+    "q2":  [set(), {"q3"}, set(), set()],
+    "q3":  [set(), set(), set(), {"q4", "q5"}],
+    "q4":  [set(), {"q4"}, set(), {"q5"}],
+    "q5":  [set(), set(), {"q6"}, set()],
+    "q6":  [set(), {"q7"}, set(), set()],
+    "q7":  [set(), set(), set(), {"q8", "q10"}],
+    "q8":  [set(), {"q9"}, set(), {"q10"}],
+    "q9":  [set(), set(), set(), {"q8", "q10"}],
+    "q10": [set(), set(), set(), set()]
 }
 
 
@@ -84,7 +63,7 @@ def aceita(string):
 
 
 if __name__ == "__main__":
-    string = "-3.14e+10"
+    string = "-12.50"
 
     if aceita(string):
         print("Cadeia aceita")

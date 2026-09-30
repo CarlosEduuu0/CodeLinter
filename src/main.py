@@ -17,8 +17,8 @@ from terminal_ER.validators import (
 LINGUAGENS = [
     ("ER-01", "Identificador camelCase", validar_identificador, afne_er1.aceita),
     ("ER-02", "Token Stripe sk_live_", validar_sk_live, afne_er2.aceita),
-    ("ER-03", "Número decimal/científico", validar_ponto_flutuante, afne_er3.aceita),
-    ("ER-04", "Import de módulo", validar_import, afne_er4.aceita),
+    ("ER-03", "Número decimal", validar_ponto_flutuante, afne_er3.aceita),
+    ("ER-04", "Import Python", validar_import, afne_er4.aceita),
     ("ER-05", "Comentário", validar_comentario, afne_er5.aceita),
 ]
 

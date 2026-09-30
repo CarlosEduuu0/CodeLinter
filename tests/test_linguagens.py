@@ -82,11 +82,11 @@ def mutacoes(indice, quantidade=3000, semente=42):
 
 
 def imports_aleatorios(quantidade=4000, semente=42):
-    """Começa com uma palavra-chave e junta pedaços típicos de imports JS e Python."""
+    """Começa com algo parecido com 'import' e junta nomes, vírgulas e espaços."""
     sorteio = random.Random(semente)
-    inicios = ["import ", "from ", "const ", "let ", "var ", "import", "requir", ""]
-    pedacos = ["import", "from", "require", "(", ")", "'", '"', "{", "}", ",", "*", "=",
-               ".", "/", "-", " ", " ", "\t", "os", "React", "x1", "_", "fs", "ç", "<"]
+    inicios = ["import ", "import ", "import ", "import", "imports ", "from ", "impor ", ""]
+    pedacos = ["os", "sys", "path", "import", ".", "_", "x1", ",", ",", " ", " ", "\t",
+               "ç", "(", "'", "-"]
     return [
         sorteio.choice(inicios)
         + "".join(sorteio.choice(pedacos) for _ in range(sorteio.randint(0, 8)))
