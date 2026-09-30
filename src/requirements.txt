@@ -1,5 +1,4 @@
-# Dependências do projeto DevLinter
+# Dependências do projeto CodeLinter
+# O programa usa só a biblioteca padrão do Python (módulo re).
+# O pytest é necessário apenas para rodar os testes automatizados.
 pytest>=7.4.0
-rich>=13.7.0
-reportlab>=4.0.0
-colorama>=0.4.6

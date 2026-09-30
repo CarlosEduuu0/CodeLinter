@@ -1,5 +1,13 @@
-# Diagramas de Autômatos Finitos Não-Determinísticos com Transições Epsilon (AFNε)
+# Diagramas dos AFNε
 
-Este diretório está reservado na arquitetura do projeto para armazenamento de diagramas visuais e arquivos exportados em PNG/PDF dos AFNε equivalentes às Expressões Regulares.
+Esta pasta guarda os diagramas dos AFNε equivalentes às 5 Expressões Regulares do projeto.
 
-> **Nota:** Conforme solicitado nas especificações do projeto (*"sem fazer a parte do automatos e para o 2 ER usase o padrão do sk_live"*), a implementação atual foca integralmente no mecanismo de tokenização léxica, auditoria sintática e validação através do módulo de Expressões Regulares (`re` do Python), mantendo este diretório reservado para futura expansão gráfica.
+| Arquivo | Linguagem |
+|---|---|
+| `afne_er1.md` | ER-01 · Identificador camelCase |
+| `afne_er2.md` | ER-02 · Token Stripe `sk_live_` |
+| `afne_er3.md` | ER-03 · Número decimal |
+| `afne_er4.md` | ER-04 · Import Python |
+| `afne_er5.md` | ER-05 · Comentário |
+
+Cada arquivo traz o diagrama (Mermaid, renderizado pelo GitHub), o estado inicial, os estados finais e a tabela de transições, incluindo os movimentos vazios (ε).

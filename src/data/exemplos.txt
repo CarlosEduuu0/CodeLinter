@@ -1,0 +1,31 @@
+# Dados de exemplo do CodeLinter: uma cadeia por linha.
+# Linhas começando com # são ignoradas. Use \n para representar quebra de linha.
+
+# ER-01 · Identificador camelCase
+totalValue
+getHTTPResponse2
+user_id
+2nota
+
+# ER-02 · Token Stripe
+sk_live_a1B2c3D4e5F6g7H8i9J0k1L2
+sk_live_12345678901234567890123
+sk_test_1234567890abcdef12345678
+
+# ER-03 · Número decimal
+-12.50
+0.0
+42
+.5
+
+# ER-04 · Import Python
+import os, sys
+import numpy_v2
+import os,
+from os import path
+
+# ER-05 · Comentário
+// TODO: corrigir
+/* bloco\nmultilinha */
+int x = 10; // inline
+/* sem fechar
