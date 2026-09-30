@@ -107,11 +107,16 @@ CASOS_TESTE = [
             ("/* bloco curto */", True),
             ("/* bloco\nmultilinha */", True),
             ("// TODO: corrigir", True),
+            ("//", True),                 # caso-limite: comentário de linha vazio
+            ("/**/", True),               # caso-limite: bloco vazio
             # Rejeitadas
             ("int x = 10; // inline", False),
             ("/* sem fechar", False),
             ("comentario sem barra", False),
-            ("*/ bloco invertido /*", False)
+            ("*/ bloco invertido /*", False),
+            ("/*/", False),               # caso-limite: o '*' da abertura não serve para fechar
+            ("// linha\noutra linha", False),  # comentário de linha não atravessa a quebra
+            ("", False),
         ])
     ]
 
