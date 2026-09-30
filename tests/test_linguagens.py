@@ -11,11 +11,11 @@ import random
 
 import pytest
 
-from automatos import afne_er1, afne_er2
+from automatos import afne_er1, afne_er2, afne_er3
 from terminal_ER.validators import CASOS_TESTE
 
 # AFNε de cada ER, na mesma ordem de CASOS_TESTE.
-AFNES = [afne_er1.aceita, afne_er2.aceita]
+AFNES = [afne_er1.aceita, afne_er2.aceita, afne_er3.aceita]
 
 CASOS = [
     pytest.param(er, afne, cadeia, esperado, id=f"{nome.split(':')[0]}-{cadeia!r}")
@@ -63,6 +63,7 @@ def quase_tokens(quantidade=3000, semente=42):
 GERADORES = [
     lambda: aleatorias(list("abzABZ019_-ç² ")),
     lambda: quase_tokens() + aleatorias(list("sk_liveA9")),
+    lambda: aleatorias(list("+-.eEx") + list("0123456789") * 2, max_pedacos=8),
 ]
 
 

@@ -79,9 +79,15 @@ CASOS_TESTE = [
         ]),
         ("ER-03: Ponto Flutuante / Científico", validar_ponto_flutuante, [
             # Aceitas
-            ("-3.14e+10", True), ("0.0005", True), (".5", True), ("1e10", True),
+            ("-3.14e+10", True), ("0.0005", True), ("1e10", True), ("+2.5E-3", True),
+            (".5", True),                 # caso-limite: sem parte inteira
+            ("3.", True),                 # caso-limite: sem casas decimais
             # Rejeitadas
-            ("42", False), ("--3.14", False), ("3.14.15", False), ("e10", False)
+            ("--3.14", False), ("3.14.15", False), ("e10", False),
+            ("42", False),                # caso-limite: inteiro não é ponto flutuante
+            (".", False),                 # caso-limite: ponto sozinho
+            ("1e", False),                # expoente sem dígitos
+            ("", False),
         ]),
         ("ER-04: Imports de Módulos", validar_import, [
             # Aceitas
