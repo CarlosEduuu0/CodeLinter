@@ -49,6 +49,8 @@ São 86 testes. Os resultados e a análise estão em [docs/analise_testes.md](do
 | ER-04 | Import Python | `import\s+[a-zA-Z0-9_.]+(\s*,\s*[a-zA-Z0-9_.]+)*` | 12 estados | [afne_er4.md](src/data/afn_diagrams/afne_er4.md) |
 | ER-05 | Comentário | `(//.*\|/\*[\s\S]*?\*/)` | 12 estados | [afne_er5.md](src/data/afn_diagrams/afne_er5.md) |
 
+**Os 5 diagramas juntos:** [docs/diagramas.md](docs/diagramas.md).
+
 A documentação de cada ER traz o nome e a finalidade, o alfabeto, a descrição da linguagem, a ER na notação formal e no código, a explicação dos operadores, o **diagrama do AFNε** (estado inicial, finais, transições e movimentos ε), a tabela de transições e os casos de teste.
 
 ## Estrutura
@@ -64,6 +66,7 @@ src/
     └── afn_diagrams/        documentação e diagramas de cada ER
 tests/                       testes automatizados (pytest)
 docs/analise_testes.md       análise dos resultados dos testes
+docs/diagramas.md            os 5 diagramas dos AFNε
 ```
 
 ## Contribuições
