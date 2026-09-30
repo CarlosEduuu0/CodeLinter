@@ -8,28 +8,23 @@ def criptografia(caracter):
     else:
         return 3
 
-# Colunas: 0 = '/', 1 = '*', 2 = quebra de linha, 3 = qualquer outro caractere, 4 = ε
-estados = {f"q{i}" for i in range(12)}
+estados = {"q0", "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11"}
 alfabeto = {0, 1, 2, 3}
 estado_inicial = "q0"
 estado_final = {"q5", "q11"}
 funcao = {
     "q0":  [{"q1"}, set(), set(), set(), set()],
-    # depois da primeira '/': outra '/' abre comentário de linha, '*' abre bloco
     "q1":  [{"q2"}, {"q6"}, set(), set(), set()],
-    # comentário de linha: qualquer caractere menos quebra de linha, repetido
     "q2":  [set(), set(), set(), set(), {"q3", "q5"}],
     "q3":  [{"q4"}, {"q4"}, set(), {"q4"}, set()],
     "q4":  [set(), set(), set(), set(), {"q3", "q5"}],
     "q5":  [set(), set(), set(), set(), set()],
-    # comentário de bloco: qualquer caractere (inclusive quebra de linha), repetido
     "q6":  [set(), set(), set(), set(), {"q7", "q9"}],
     "q7":  [{"q8"}, {"q8"}, {"q8"}, {"q8"}, set()],
     "q8":  [set(), set(), set(), set(), {"q7", "q9"}],
-    # fechamento '*/'
     "q9":  [set(), {"q10"}, set(), set(), set()],
     "q10": [{"q11"}, set(), set(), set(), set()],
-    "q11": [set(), set(), set(), set(), set()],
+    "q11": [set(), set(), set(), set(), set()]
 }
 
 

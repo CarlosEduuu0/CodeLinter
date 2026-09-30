@@ -168,7 +168,7 @@ flowchart LR
 - **q8 a q32:** um estado para cada caractere do sufixo. Cada estado aceita qualquer alfanumérico e avança para o próximo. É como uma **contagem**: estar em q20 significa "já li 12 caracteres do sufixo".
 - **q32 é o único final:** só chega lá quem leu exatamente 24 caracteres. Com 23 a máquina para em q31 (não final). Com 25 ela tenta sair de q32, que não tem transição, e a cadeia é rejeitada.
 
-No código, as 24 linhas do sufixo são criadas por um laço que chama `gerar_transicao_sufixo()` uma vez para cada estado.
+No código, cada estado do sufixo é uma linha do dicionário `funcao` que chama `gerar_transicao_sufixo()` com o próximo estado: `"q8": gerar_transicao_sufixo("q9")`, `"q9": gerar_transicao_sufixo("q10")` e assim por diante, até q31 → q32. É o mesmo padrão do código original, só que com 24 linhas em vez de 4.
 
 ## Casos de teste
 

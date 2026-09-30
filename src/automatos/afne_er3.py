@@ -8,7 +8,6 @@ def criptografia(caracter):
     else:
         return -1
 
-# Colunas: 0 = sinal, 1 = dígito, 2 = ponto, 3 = ε
 estados = {f"q{i}" for i in range(11)}
 alfabeto = {0, 1, 2}
 estado_inicial = "q0"

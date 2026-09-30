@@ -1,5 +1,3 @@
-# isascii() garante o mesmo alfabeto da ER ([a-z], [A-Z], [0-9]):
-# sem ele, 'ç'.islower() e '²'.isdigit() também dariam True.
 def criptografia(caracter):
     if caracter.isascii() and caracter.islower():
         return 0

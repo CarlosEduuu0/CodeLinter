@@ -15,9 +15,7 @@ def gerar_transicao_sufixo(proximo_estado):
         trans[idx] = {proximo_estado}
     return trans
 
-TAMANHO_SUFIXO = 24
-
-estados = {f"q{i}" for i in range(8 + TAMANHO_SUFIXO + 1)}
+estados = {f"q{i}" for i in range(33)}
 alfabeto = set(range(8))
 estado_inicial = "q0"
 estado_final = {"q32"}
@@ -30,13 +28,32 @@ funcao = {
     "q5":  [set(), set(), set(), set(), set(), {"q6"}, set(), set(), set()],
     "q6":  [set(), set(), set(), set(), set(), set(), {"q7"}, set(), set()],
     "q7":  [set(), set(), {"q8"}, set(), set(), set(), set(), set(), set()],
+    "q8":  gerar_transicao_sufixo("q9"),
+    "q9":  gerar_transicao_sufixo("q10"),
+    "q10": gerar_transicao_sufixo("q11"),
+    "q11": gerar_transicao_sufixo("q12"),
+    "q12": gerar_transicao_sufixo("q13"),
+    "q13": gerar_transicao_sufixo("q14"),
+    "q14": gerar_transicao_sufixo("q15"),
+    "q15": gerar_transicao_sufixo("q16"),
+    "q16": gerar_transicao_sufixo("q17"),
+    "q17": gerar_transicao_sufixo("q18"),
+    "q18": gerar_transicao_sufixo("q19"),
+    "q19": gerar_transicao_sufixo("q20"),
+    "q20": gerar_transicao_sufixo("q21"),
+    "q21": gerar_transicao_sufixo("q22"),
+    "q22": gerar_transicao_sufixo("q23"),
+    "q23": gerar_transicao_sufixo("q24"),
+    "q24": gerar_transicao_sufixo("q25"),
+    "q25": gerar_transicao_sufixo("q26"),
+    "q26": gerar_transicao_sufixo("q27"),
+    "q27": gerar_transicao_sufixo("q28"),
+    "q28": gerar_transicao_sufixo("q29"),
+    "q29": gerar_transicao_sufixo("q30"),
+    "q30": gerar_transicao_sufixo("q31"),
+    "q31": gerar_transicao_sufixo("q32"),
+    "q32": [set() for _ in range(9)]
 }
-
-# Sufixo de 24 caracteres alfanuméricos: q8 -> q9 -> ... -> q32,
-# um estado para cada caractere lido.
-for n in range(8, 8 + TAMANHO_SUFIXO):
-    funcao[f"q{n}"] = gerar_transicao_sufixo(f"q{n + 1}")
-funcao["q32"] = [set() for _ in range(9)]
 
 
 def fecho_vazio(estado_atual):
