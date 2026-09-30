@@ -1,9 +1,11 @@
+# isascii() garante o mesmo alfabeto da ER ([a-z], [A-Z], [0-9]):
+# sem ele, 'ç'.islower() e '²'.isdigit() também dariam True.
 def criptografia(caracter):
-    if caracter.islower():
+    if caracter.isascii() and caracter.islower():
         return 0
-    elif caracter.isupper():
+    elif caracter.isascii() and caracter.isupper():
         return 1
-    elif caracter.isdigit():
+    elif caracter.isascii() and caracter.isdigit():
         return 2
     else:
         return -1
@@ -11,7 +13,7 @@ def criptografia(caracter):
 estados = {"q0", "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"}
 alfabeto = {0, 1, 2}
 estado_inicial = "q0"
-estado_final = {"q1", "q4", "q6", "q7", "q8"}
+estado_final = {"q8"}
 funcao = {
     "q0": [{"q1"}, set(), set(), set()],
     "q1": [set(), set(), set(), {"q2", "q8"}],

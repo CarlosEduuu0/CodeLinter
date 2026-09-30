@@ -2,7 +2,7 @@ import re
 
 CAMEL_CASE_PATTERN: str = r"[a-z][a-zA-Z0-9]*"
 def validar_identificador(cadeia: str) -> bool:
-    """Valida se a cadeia inteira é um identificador camelCase ou snake_case válido."""
+    """Valida se a cadeia inteira é um identificador camelCase válido."""
     return bool(
         re.fullmatch(CAMEL_CASE_PATTERN, cadeia)
     )
@@ -44,13 +44,19 @@ def validar_comentario(cadeia: str) -> bool:
     """Valida se a cadeia é um comentário de linha ou de bloco completo."""
     return bool(re.fullmatch(COMMENT_PATTERN, cadeia))
 
-if __name__ == "__main__":
-    testes = [
+# Casos de teste de cada ER: (cadeia, esperado).
+# Usados aqui no __main__ e também pelos testes automatizados em tests/.
+CASOS_TESTE = [
         ("ER-01: Identificadores", validar_identificador, [
             # Aceitas
-            ("totalValue", True), ("user_id", True), ("v1", True), ("x_2_y", True),
+            ("totalValue", True), ("userName", True), ("v1", True),
+            ("getHTTPResponse2", True), ("a1b2c3", True),
+            ("x", True),                  # caso-limite: menor identificador possível
             # Rejeitadas
-            ("2nota", False), ("nome-completo", False), ("User_Name", False), ("", False)
+            ("2nota", False), ("nome-completo", False), ("User", False),
+            ("user_id", False),           # snake_case não é camelCase
+            ("ação", False),              # caso-limite: letra fora do alfabeto ASCII
+            ("", False),                  # caso-limite: cadeia vazia
         ]),
         ("ER-02: Token API (sk_live)", validar_sk_live, [
             # Aceitas
@@ -96,7 +102,8 @@ if __name__ == "__main__":
         ])
     ]
 
-    for nome_er, funcao, casos in testes:
+if __name__ == "__main__":
+    for nome_er, funcao, casos in CASOS_TESTE:
         print(f"=== {nome_er} ===")
         for cadeia, esperado in casos:
             resultado = funcao(cadeia)
