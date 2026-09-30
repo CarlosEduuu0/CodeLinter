@@ -11,4 +11,4 @@ def test_cinco_linguagens_registradas():
 
 
 def test_cadeia_vazia_nao_pertence_a_nenhuma_linguagem():
-    assert not any(aceita for _, _, aceita in analisar(""))
+    assert not any(er or afne for _, _, er, afne in analisar(""))
