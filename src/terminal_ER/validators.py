@@ -64,11 +64,18 @@ CASOS_TESTE = [
             ("sk_live_ABCDEFGHIJKLMNOPQRSTUVWX", True),
             ("sk_live_a1B2c3D4e5F6g7H8i9J0k1L2", True),
             ("sk_live_000000000000000000000000", True),
+            ("sk_live_ZzZzZzZzZzZzZzZzZzZzZzZz", True),
+            ("sk_live_sklivesklivesklivesklive", True),  # caso-limite: sufixo com as letras do prefixo
             # Rejeitadas
             ("sk_test_1234567890abcdef12345678", False),
             ("sk_live_curto", False),
-            ("sk_live_1234567890abcdef123456789", False),
-            ("sk_live_1234567890!@#$%^&*()123", False)
+            ("sk_live_12345678901234567890123", False),   # caso-limite: 23 caracteres
+            ("sk_live_1234567890abcdef123456789", False),  # caso-limite: 25 caracteres
+            ("sk_live_1234567890!@#$%^&*()123", False),
+            ("sk_live_1234567890abcdef1234567_", False),  # "_" não é alfanumérico
+            ("SK_LIVE_1234567890abcdef12345678", False),  # prefixo em maiúsculas
+            ("sk_live_skliveskliveskliveskli", False),  # 22 caracteres com as letras do prefixo
+            ("", False),
         ]),
         ("ER-03: Ponto Flutuante / Científico", validar_ponto_flutuante, [
             # Aceitas

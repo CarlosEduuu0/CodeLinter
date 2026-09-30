@@ -11,11 +11,11 @@ import random
 
 import pytest
 
-from automatos import afne_er1
+from automatos import afne_er1, afne_er2
 from terminal_ER.validators import CASOS_TESTE
 
 # AFNε de cada ER, na mesma ordem de CASOS_TESTE.
-AFNES = [afne_er1.aceita]
+AFNES = [afne_er1.aceita, afne_er2.aceita]
 
 CASOS = [
     pytest.param(er, afne, cadeia, esperado, id=f"{nome.split(':')[0]}-{cadeia!r}")
@@ -49,8 +49,20 @@ def aleatorias(pedacos, quantidade=3000, max_pedacos=10, semente=42):
     ]
 
 
+def quase_tokens(quantidade=3000, semente=42):
+    """Prefixos parecidos com sk_live_ + sufixos de 22 a 26 caracteres (em volta dos 24)."""
+    sorteio = random.Random(semente)
+    prefixos = ["sk_live_"] * 5 + ["sk_test_", "SK_LIVE_", "sk_live", "sk__live_", "live_", ""]
+    return [
+        sorteio.choice(prefixos)
+        + "".join(sorteio.choice("aZ09sklivAz8" * 5 + "_!ç") for _ in range(sorteio.randint(22, 26)))
+        for _ in range(quantidade)
+    ]
+
+
 GERADORES = [
     lambda: aleatorias(list("abzABZ019_-ç² ")),
+    lambda: quase_tokens() + aleatorias(list("sk_liveA9")),
 ]
 
 

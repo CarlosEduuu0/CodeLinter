@@ -2,7 +2,7 @@ def criptografia(caracter):
     mapeamento = {'s': 0, 'k': 1, '_': 2, 'l': 3, 'i': 4, 'v': 5, 'e': 6}
     if caracter in mapeamento:
         return mapeamento[caracter]
-    elif caracter.isalnum():
+    elif caracter.isascii() and caracter.isalnum():
         return 7
     else:
         return -1
@@ -15,10 +15,12 @@ def gerar_transicao_sufixo(proximo_estado):
         trans[idx] = {proximo_estado}
     return trans
 
-estados = {f"q{i}" for i in range(13)}
+TAMANHO_SUFIXO = 24
+
+estados = {f"q{i}" for i in range(8 + TAMANHO_SUFIXO + 1)}
 alfabeto = set(range(8))
 estado_inicial = "q0"
-estado_final = {"q12"}
+estado_final = {"q32"}
 funcao = {
     "q0":  [{"q1"}, set(), set(), set(), set(), set(), set(), set(), set()],
     "q1":  [set(), {"q2"}, set(), set(), set(), set(), set(), set(), set()],
@@ -28,12 +30,13 @@ funcao = {
     "q5":  [set(), set(), set(), set(), set(), {"q6"}, set(), set(), set()],
     "q6":  [set(), set(), set(), set(), set(), set(), {"q7"}, set(), set()],
     "q7":  [set(), set(), {"q8"}, set(), set(), set(), set(), set(), set()],
-    "q8":  gerar_transicao_sufixo("q9"),
-    "q9":  gerar_transicao_sufixo("q10"),
-    "q10": gerar_transicao_sufixo("q11"),
-    "q11": gerar_transicao_sufixo("q12"),
-    "q12": [set() for _ in range(9)]
 }
+
+# Sufixo de 24 caracteres alfanuméricos: q8 -> q9 -> ... -> q32,
+# um estado para cada caractere lido.
+for n in range(8, 8 + TAMANHO_SUFIXO):
+    funcao[f"q{n}"] = gerar_transicao_sufixo(f"q{n + 1}")
+funcao["q32"] = [set() for _ in range(9)]
 
 
 def fecho_vazio(estado_atual):
@@ -71,7 +74,7 @@ def aceita(string):
 
 
 if __name__ == "__main__":
-    string = "sk_live_a1B2"
+    string = "sk_live_a1B2c3D4e5F6g7H8i9J0k1L2"
 
     if aceita(string):
         print("Cadeia aceita")
