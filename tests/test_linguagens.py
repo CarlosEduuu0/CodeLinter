@@ -11,11 +11,11 @@ import random
 
 import pytest
 
-from automatos import afne_er1, afne_er2, afne_er3
+from automatos import afne_er1, afne_er2, afne_er3, afne_er4, afne_er5
 from terminal_ER.validators import CASOS_TESTE
 
 # AFNε de cada ER, na mesma ordem de CASOS_TESTE.
-AFNES = [afne_er1.aceita, afne_er2.aceita, afne_er3.aceita]
+AFNES = [afne_er1.aceita, afne_er2.aceita, afne_er3.aceita, afne_er4.aceita, afne_er5.aceita]
 
 CASOS = [
     pytest.param(er, afne, cadeia, esperado, id=f"{nome.split(':')[0]}-{cadeia!r}")
@@ -60,10 +60,46 @@ def quase_tokens(quantidade=3000, semente=42):
     ]
 
 
+def mutacoes(indice, quantidade=3000, semente=42):
+    """Pega as cadeias aceitas da ER e aplica de 1 a 3 mutações (apagar, trocar ou inserir)."""
+    sorteio = random.Random(semente)
+    validas = [cadeia for cadeia, esperado in CASOS_TESTE[indice][2] if esperado]
+    simbolos = "aZ09_ .,'\"(){}*=/-+eE\n\tç"
+    resultado = []
+    for _ in range(quantidade):
+        cadeia = list(sorteio.choice(validas))
+        for _ in range(sorteio.randint(1, 3)):
+            pos = sorteio.randint(0, len(cadeia))
+            acao = sorteio.choice(["apagar", "trocar", "inserir"])
+            if acao == "inserir" or not cadeia:
+                cadeia.insert(pos, sorteio.choice(simbolos))
+            elif acao == "apagar":
+                del cadeia[min(pos, len(cadeia) - 1)]
+            else:
+                cadeia[min(pos, len(cadeia) - 1)] = sorteio.choice(simbolos)
+        resultado.append("".join(cadeia))
+    return resultado
+
+
+def imports_aleatorios(quantidade=4000, semente=42):
+    """Começa com uma palavra-chave e junta pedaços típicos de imports JS e Python."""
+    sorteio = random.Random(semente)
+    inicios = ["import ", "from ", "const ", "let ", "var ", "import", "requir", ""]
+    pedacos = ["import", "from", "require", "(", ")", "'", '"', "{", "}", ",", "*", "=",
+               ".", "/", "-", " ", " ", "\t", "os", "React", "x1", "_", "fs", "ç", "<"]
+    return [
+        sorteio.choice(inicios)
+        + "".join(sorteio.choice(pedacos) for _ in range(sorteio.randint(0, 8)))
+        for _ in range(quantidade)
+    ]
+
+
 GERADORES = [
     lambda: aleatorias(list("abzABZ019_-ç² ")),
     lambda: quase_tokens() + aleatorias(list("sk_liveA9")),
     lambda: aleatorias(list("+-.eEx") + list("0123456789") * 2, max_pedacos=8),
+    lambda: imports_aleatorios(),
+    lambda: aleatorias(list("/*\nab ") + ["//", "/*", "*/"], max_pedacos=8),
 ]
 
 
@@ -71,5 +107,5 @@ GERADORES = [
 def test_er_e_afne_concordam_em_cadeias_aleatorias(indice):
     nome, er, _ = CASOS_TESTE[indice]
     afne = AFNES[indice]
-    for cadeia in GERADORES[indice]():
+    for cadeia in GERADORES[indice]() + mutacoes(indice):
         assert er(cadeia) == afne(cadeia), f"{nome}: ER e AFNε discordam em {cadeia!r}"

@@ -34,7 +34,7 @@ MODULE_IMPORT_PATTERN: str = (
 
 def validar_import(cadeia: str) -> bool:
     """Valida se uma linha completa é uma instrução de importação válida."""
-    return bool(re.fullmatch(MODULE_IMPORT_PATTERN, cadeia.strip()))
+    return bool(re.fullmatch(MODULE_IMPORT_PATTERN, cadeia))
 
 
 
@@ -47,78 +47,84 @@ def validar_comentario(cadeia: str) -> bool:
 # Casos de teste de cada ER: (cadeia, esperado).
 # Usados aqui no __main__ e também pelos testes automatizados em tests/.
 CASOS_TESTE = [
-        ("ER-01: Identificadores", validar_identificador, [
-            # Aceitas
-            ("totalValue", True), ("userName", True), ("v1", True),
-            ("getHTTPResponse2", True), ("a1b2c3", True),
-            ("x", True),                  # caso-limite: menor identificador possível
-            # Rejeitadas
-            ("2nota", False), ("nome-completo", False), ("User", False),
-            ("user_id", False),           # snake_case não é camelCase
-            ("ação", False),              # caso-limite: letra fora do alfabeto ASCII
-            ("", False),                  # caso-limite: cadeia vazia
-        ]),
-        ("ER-02: Token API (sk_live)", validar_sk_live, [
-            # Aceitas
-            ("sk_live_1234567890abcdef12345678", True),
-            ("sk_live_ABCDEFGHIJKLMNOPQRSTUVWX", True),
-            ("sk_live_a1B2c3D4e5F6g7H8i9J0k1L2", True),
-            ("sk_live_000000000000000000000000", True),
-            ("sk_live_ZzZzZzZzZzZzZzZzZzZzZzZz", True),
-            ("sk_live_sklivesklivesklivesklive", True),  # caso-limite: sufixo com as letras do prefixo
-            # Rejeitadas
-            ("sk_test_1234567890abcdef12345678", False),
-            ("sk_live_curto", False),
-            ("sk_live_12345678901234567890123", False),   # caso-limite: 23 caracteres
-            ("sk_live_1234567890abcdef123456789", False),  # caso-limite: 25 caracteres
-            ("sk_live_1234567890!@#$%^&*()123", False),
-            ("sk_live_1234567890abcdef1234567_", False),  # "_" não é alfanumérico
-            ("SK_LIVE_1234567890abcdef12345678", False),  # prefixo em maiúsculas
-            ("sk_live_skliveskliveskliveskli", False),  # 22 caracteres com as letras do prefixo
-            ("", False),
-        ]),
-        ("ER-03: Ponto Flutuante / Científico", validar_ponto_flutuante, [
-            # Aceitas
-            ("-3.14e+10", True), ("0.0005", True), ("1e10", True), ("+2.5E-3", True),
-            (".5", True),                 # caso-limite: sem parte inteira
-            ("3.", True),                 # caso-limite: sem casas decimais
-            # Rejeitadas
-            ("--3.14", False), ("3.14.15", False), ("e10", False),
-            ("42", False),                # caso-limite: inteiro não é ponto flutuante
-            (".", False),                 # caso-limite: ponto sozinho
-            ("1e", False),                # expoente sem dígitos
-            ("", False),
-        ]),
-        ("ER-04: Imports de Módulos", validar_import, [
-            # Aceitas
-            ("import React from 'react'", True),
-            ("const fs = require('fs')", True),
-            ("from os import path", True),
-            ("import math", True),
-            # Rejeitadas
-            ("import", False),
-            ("require('fs')", False),
-            ("from import path", False),
-            ("include <stdio.h>", False)
-        ]),
-        ("ER-05: Comentários", validar_comentario, [
-            # Aceitas
-            ("// comentario simples", True),
-            ("/* bloco curto */", True),
-            ("/* bloco\nmultilinha */", True),
-            ("// TODO: corrigir", True),
-            ("//", True),                 # caso-limite: comentário de linha vazio
-            ("/**/", True),               # caso-limite: bloco vazio
-            # Rejeitadas
-            ("int x = 10; // inline", False),
-            ("/* sem fechar", False),
-            ("comentario sem barra", False),
-            ("*/ bloco invertido /*", False),
-            ("/*/", False),               # caso-limite: o '*' da abertura não serve para fechar
-            ("// linha\noutra linha", False),  # comentário de linha não atravessa a quebra
-            ("", False),
-        ])
-    ]
+    ("ER-01: Identificadores", validar_identificador, [
+        # Aceitas
+        ("totalValue", True), ("userName", True), ("v1", True),
+        ("getHTTPResponse2", True), ("a1b2c3", True),
+        ("x", True),                  # caso-limite: menor identificador possível
+        # Rejeitadas
+        ("2nota", False), ("nome-completo", False), ("User", False),
+        ("user_id", False),           # snake_case não é camelCase
+        ("ação", False),              # caso-limite: letra fora do alfabeto ASCII
+        ("", False),                  # caso-limite: cadeia vazia
+    ]),
+    ("ER-02: Token API (sk_live)", validar_sk_live, [
+        # Aceitas
+        ("sk_live_1234567890abcdef12345678", True),
+        ("sk_live_ABCDEFGHIJKLMNOPQRSTUVWX", True),
+        ("sk_live_a1B2c3D4e5F6g7H8i9J0k1L2", True),
+        ("sk_live_000000000000000000000000", True),
+        ("sk_live_ZzZzZzZzZzZzZzZzZzZzZzZz", True),
+        ("sk_live_sklivesklivesklivesklive", True),  # caso-limite: sufixo com as letras do prefixo
+        # Rejeitadas
+        ("sk_test_1234567890abcdef12345678", False),
+        ("sk_live_curto", False),
+        ("sk_live_12345678901234567890123", False),   # caso-limite: 23 caracteres
+        ("sk_live_1234567890abcdef123456789", False),  # caso-limite: 25 caracteres
+        ("sk_live_1234567890!@#$%^&*()123", False),
+        ("sk_live_1234567890abcdef1234567_", False),  # "_" não é alfanumérico
+        ("SK_LIVE_1234567890abcdef12345678", False),  # prefixo em maiúsculas
+        ("sk_live_skliveskliveskliveskli", False),  # 22 caracteres com as letras do prefixo
+        ("", False),
+    ]),
+    ("ER-03: Ponto Flutuante / Científico", validar_ponto_flutuante, [
+        # Aceitas
+        ("-3.14e+10", True), ("0.0005", True), ("1e10", True), ("+2.5E-3", True),
+        (".5", True),                 # caso-limite: sem parte inteira
+        ("3.", True),                 # caso-limite: sem casas decimais
+        # Rejeitadas
+        ("--3.14", False), ("3.14.15", False), ("e10", False),
+        ("42", False),                # caso-limite: inteiro não é ponto flutuante
+        (".", False),                 # caso-limite: ponto sozinho
+        ("1e", False),                # expoente sem dígitos
+        ("", False),
+    ]),
+    ("ER-04: Imports de Módulos", validar_import, [
+        # Aceitas
+        ("import React from 'react'", True),
+        ("const fs = require('fs')", True),
+        ("from os import path", True),
+        ("import math", True),
+        ('import { useState } from "react"', True),
+        ("let cfg = require('./config/app-dev')", True),  # caso-limite: caminho com ./ / e -
+        # Rejeitadas
+        ("import", False),
+        ("require('fs')", False),
+        ("from import path", False),
+        ("include <stdio.h>", False),
+        ("import React from 'react", False),   # aspas sem fechar
+        ("const fs = require('fs'", False),    # caso-limite: falta só o ')'
+        ("from os import", False),             # caso-limite: import sem nomes
+        ("", False),
+    ]),
+    ("ER-05: Comentários", validar_comentario, [
+        # Aceitas
+        ("// comentario simples", True),
+        ("/* bloco curto */", True),
+        ("/* bloco\nmultilinha */", True),
+        ("// TODO: corrigir", True),
+        ("//", True),                 # caso-limite: comentário de linha vazio
+        ("/**/", True),               # caso-limite: bloco vazio
+        # Rejeitadas
+        ("int x = 10; // inline", False),
+        ("/* sem fechar", False),
+        ("comentario sem barra", False),
+        ("*/ bloco invertido /*", False),
+        ("/*/", False),               # caso-limite: o '*' da abertura não serve para fechar
+        ("// linha\noutra linha", False),  # comentário de linha não atravessa a quebra
+        ("", False),
+    ])
+]
 
 if __name__ == "__main__":
     for nome_er, funcao, casos in CASOS_TESTE:
